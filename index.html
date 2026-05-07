@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anass & Sofia — 15.05.2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pearl: #f5f0eb;
+    --pearl-deep: #ede5d8;
+    --sage: #7a9070;
+    --sage-light: #a8bc9e;
+    --sage-dark: #4a6142;
+    --moss: #5c7354;
+    --cream: #faf7f2;
+    --gold: #c9a96e;
+    --text: #3a3530;
+    --text-muted: #7a7068;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Jost', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+/* ── PASSWORD GATE ── */
+.gate {
+position: fixed; inset: 0; z-index: 9999;
+background: linear-gradient(160deg, var(–pearl) 0%, var(–pearl-deep) 40%, #dde8d5 100%);
+display: flex; align-items: center; justify-content: center;
+padding: 2rem;
+transition: opacity .6s ease, visibility .6s ease;
+}
+.gate.unlocked { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.gate-leaves .leaf-g {
+position: absolute; border-radius: 50% 0;
+background: linear-gradient(135deg, var(–sage-light), var(–sage-dark));
+opacity: 0.1;
+}
+.gate-leaves .leaf-g:nth-child(1) { width:160px;height:80px;top:5%;left:-30px;transform:rotate(30deg); }
+.gate-leaves .leaf-g:nth-child(2) { width:110px;height:55px;top:12%;left:4%;transform:rotate(-20deg); }
+.gate-leaves .leaf-g:nth-child(3) { width:180px;height:90px;top:4%;right:-40px;transform:rotate(-40deg); }
+.gate-leaves .leaf-g:nth-child(4) { width:130px;height:65px;top:16%;right:6%;transform:rotate(15deg); }
+.gate-leaves .leaf-g:nth-child(5) { width:150px;height:75px;bottom:8%;left:-25px;transform:rotate(50deg); }
+.gate-leaves .leaf-g:nth-child(6) { width:170px;height:85px;bottom:6%;right:-35px;transform:rotate(-50deg); }
+
+.gate-card {
+position: relative; z-index: 2;
+background: rgba(255,255,255,0.7);
+backdrop-filter: blur(16px);
+border: 1px solid rgba(201,169,110,0.25);
+border-radius: 24px;
+padding: 3rem 2.5rem;
+max-width: 400px; width: 100%;
+text-align: center;
+box-shadow: 0 20px 60px rgba(74,97,66,0.1);
+animation: fadeUp .8s ease both;
+}
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+
+.gate-ring {
+width: 64px; height: 64px; margin: 0 auto 1.5rem;
+border-radius: 50%;
+background: linear-gradient(135deg, var(–pearl-deep), #dde8d5);
+display: flex; align-items: center; justify-content: center;
+font-size: 1.6rem;
+box-shadow: 0 4px 16px rgba(122,144,112,0.2);
+}
+
+.gate-title {
+font-family: ‘Cormorant Garamond’, serif;
+font-size: 2rem; font-weight: 300; line-height: 1.2;
+color: var(–text); margin-bottom: .3rem;
+}
+.gate-title em { font-style: italic; color: var(–sage-dark); }
+
+.gate-date {
+font-family: ‘Jost’, sans-serif; font-weight: 200;
+font-size: .72rem; letter-spacing: .4em; color: var(–text-muted);
+margin-bottom: 2rem;
+}
+
+.gate-label {
+font-family: ‘Jost’, sans-serif; font-weight: 300;
+font-size: .78rem; color: var(–text-muted);
+margin-bottom: 1.2rem; line-height: 1.6;
+}
+
+.gate-input-wrap { position: relative; margin-bottom: .8rem; }
+
+.gate-input {
+width: 100%;
+padding: .85rem 3rem .85rem 1.2rem;
+border: 1.5px solid var(–sage-light);
+border-radius: 50px;
+background: rgba(255,255,255,0.8);
+font-family: ‘Jost’, sans-serif; font-weight: 300;
+font-size: .9rem; letter-spacing: .2em;
+color: var(–text); outline: none;
+transition: border-color .3s, box-shadow .3s;
+text-align: center;
+}
+.gate-input:focus { border-color: var(–sage); box-shadow: 0 0 0 3px rgba(122,144,112,0.15); }
+.gate-input.error { border-color: #d4736a; animation: shake .4s ease; }
+
+@keyframes shake {
+0%,100%{transform:translateX(0);}
+20%,60%{transform:translateX(-6px);}
+40%,80%{transform:translateX(6px);}
+}
+
+.eye-btn {
+position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+background: none; border: none; cursor: pointer; color: var(–text-muted);
+font-size: .9rem; padding: .2rem;
+}
+
+.gate-error {
+font-family: ‘Jost’, sans-serif; font-size: .78rem; font-weight: 300;
+color: #c0544a; min-height: 1.2rem; margin-bottom: .8rem;
+}
+
+.gate-btn {
+width: 100%;
+background: linear-gradient(135deg, var(–sage-dark), var(–moss));
+color: white; border: none; border-radius: 50px;
+font-family: ‘Jost’, sans-serif; font-weight: 300;
+font-size: .85rem; letter-spacing: .18em; text-transform: uppercase;
+padding: .9rem 2rem; cursor: pointer;
+transition: all .3s; box-shadow: 0 4px 20px rgba(74,97,66,.25);
+}
+.gate-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(74,97,66,.35); }
+.gate-btn:active { transform: translateY(0); }
+
+.gate-hint {
+margin-top: 1.2rem;
+font-family: ‘Cormorant Garamond’, serif; font-style: italic;
+font-size: .88rem; color: var(–text-muted);
+}
+
+/* ── MAIN SITE (hidden until unlocked) ── */
+.site { opacity: 0; transition: opacity .6s ease; }
+.site.visible { opacity: 1; }
+
+/* CONFIG BANNER */
+.config-banner {
+background: linear-gradient(135deg,#fff8e7,#fef3c7);
+border-bottom: 1.5px solid var(–gold);
+padding: 1rem 2rem; text-align: center;
+font-family: ‘Jost’,sans-serif; font-size: .82rem; color: #7a5c10; line-height: 1.7;
+}
+.config-banner strong { color: #5a3e05; }
+.config-banner code { background:rgba(0,0,0,0.08); padding:.1rem .4rem; border-radius:4px; font-size:.78rem; font-family:monospace; }
+.config-banner.hidden { display:none; }
+
+/* LEAVES */
+.leaf { position:absolute; border-radius:50% 0; background:linear-gradient(135deg,var(–sage-light),var(–sage-dark)); opacity:.12; animation:sway 8s ease-in-out infinite; }
+.leaf:nth-child(1){width:180px;height:90px;top:8%;left:-40px;transform:rotate(30deg);}
+.leaf:nth-child(2){width:120px;height:60px;top:15%;left:5%;transform:rotate(-20deg);animation-delay:1s;}
+.leaf:nth-child(3){width:200px;height:100px;top:5%;right:-50px;transform:rotate(-40deg);animation-delay:2s;}
+.leaf:nth-child(4){width:140px;height:70px;top:18%;right:8%;transform:rotate(15deg);animation-delay:.5s;}
+.leaf:nth-child(5){width:160px;height:80px;bottom:10%;left:-30px;transform:rotate(50deg);animation-delay:3s;}
+.leaf:nth-child(6){width:100px;height:50px;bottom:20%;left:10%;transform:rotate(-35deg);animation-delay:1.5s;}
+.leaf:nth-child(7){width:180px;height:90px;bottom:8%;right:-40px;transform:rotate(-50deg);animation-delay:2.5s;}
+.leaf:nth-child(8){width:120px;height:60px;bottom:22%;right:6%;transform:rotate(25deg);animation-delay:.8s;}
+@keyframes sway{0%,100%{transform-origin:center;}50%{margin-top:-8px;}}
+
+/* HERO */
+.hero { min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center; position:relative;overflow:hidden;padding:2rem; background:linear-gradient(160deg,var(–pearl) 0%,var(–pearl-deep) 40%,#dde8d5 100%); }
+.hero::before { content:’’;position:absolute;inset:0; background-image:radial-gradient(ellipse 60% 40% at 20% 80%,rgba(122,144,112,0.15) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 80% 20%,rgba(201,169,110,0.1) 0%,transparent 55%); }
+.hero-content{position:relative;z-index:2;text-align:center;animation:fadeUp 1.2s ease both;}
+.hero-eyebrow{font-family:‘Jost’,sans-serif;font-weight:200;font-size:.75rem;letter-spacing:.35em;text-transform:uppercase;color:var(–moss);margin-bottom:1.2rem;animation:fadeUp 1.2s .2s ease both;opacity:0;}
+.hero-names{font-family:‘Cormorant Garamond’,serif;font-size:clamp(3.5rem,10vw,7rem);font-weight:300;line-height:1;color:var(–text);animation:fadeUp 1.2s .4s ease both;opacity:0;}
+.hero-names em{font-style:italic;color:var(–sage-dark);}
+.hero-ampersand{display:block;font-size:clamp(2rem,5vw,3.5rem);color:var(–gold);margin:.2rem 0;font-style:italic;}
+.hero-date{font-family:‘Jost’,sans-serif;font-weight:200;font-size:.8rem;letter-spacing:.4em;color:var(–text-muted);margin-top:1.5rem;animation:fadeUp 1.2s .6s ease both;opacity:0;}
+.hero-divider{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(–gold),transparent);margin:2rem auto;animation:fadeUp 1.2s .7s ease both;opacity:0;}
+.hero-tagline{font-family:‘Cormorant Garamond’,serif;font-size:clamp(1rem,2.5vw,1.3rem);font-style:italic;color:var(–text-muted);font-weight:300;animation:fadeUp 1.2s .8s ease both;opacity:0;max-width:380px;line-height:1.6;}
+.scroll-cta{margin-top:3rem;animation:fadeUp 1.2s 1s ease both;opacity:0;display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+.scroll-cta span{font-family:‘Jost’,sans-serif;font-weight:200;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(–sage);}
+.scroll-arrow{width:1px;height:40px;background:linear-gradient(to bottom,var(–sage),transparent);animation:scrollPulse 2s ease-in-out infinite;}
+@keyframes scrollPulse{0%,100%{opacity:.4;}50%{opacity:1;}}
+
+/* UPLOAD */
+.upload-section{padding:6rem 2rem;background:var(–cream);position:relative;}
+.upload-section::before{content:’’;position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(–sage-light),transparent);}
+.section-header{text-align:center;margin-bottom:3rem;}
+.section-label{font-family:‘Jost’,sans-serif;font-weight:200;font-size:.7rem;letter-spacing:.4em;text-transform:uppercase;color:var(–sage);margin-bottom:.8rem;}
+.section-title{font-family:‘Cormorant Garamond’,serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:300;color:var(–text);line-height:1.2;}
+.section-title em{font-style:italic;color:var(–sage-dark);}
+.section-sub{margin-top:.8rem;font-family:‘Jost’,sans-serif;font-weight:300;font-size:.9rem;color:var(–text-muted);line-height:1.6;}
+
+.drop-zone { max-width:560px;margin:0 auto 2rem;border:1.5px dashed var(–sage-light);border-radius:16px; padding:3.5rem 2rem;text-align:center;cursor:pointer; transition:all .35s ease;background:linear-gradient(135deg,rgba(245,240,235,0.8),rgba(221,232,213,0.4)); position:relative;overflow:hidden; }
+.drop-zone::before{content:’’;position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(122,144,112,0.08) 0%,transparent 70%);opacity:0;transition:opacity .3s;}
+.drop-zone:hover::before,.drop-zone.dragover::before{opacity:1;}
+.drop-zone:hover,.drop-zone.dragover{border-color:var(–sage);border-style:solid;transform:translateY(-2px);box-shadow:0 12px 40px rgba(90,120,80,0.12);}
+.drop-icon{width:52px;height:52px;margin:0 auto 1.2rem;color:var(–sage);opacity:.7;}
+.drop-title{font-family:‘Cormorant Garamond’,serif;font-size:1.4rem;font-weight:300;color:var(–text);margin-bottom:.4rem;}
+.drop-sub{font-family:‘Jost’,sans-serif;font-weight:300;font-size:.8rem;color:var(–text-muted);letter-spacing:.05em;}
+.drop-zone input[type=“file”]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+
+.btn-upload { display:block;margin:0 auto;max-width:280px;text-align:center; background:linear-gradient(135deg,var(–sage-dark),var(–moss));color:white; font-family:‘Jost’,sans-serif;font-weight:300;font-size:.85rem;letter-spacing:.15em;text-transform:uppercase; padding:.9rem 2.5rem;border:none;border-radius:50px;cursor:pointer; transition:all .3s ease;box-shadow:0 4px 20px rgba(74,97,66,.3); }
+.btn-upload:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(74,97,66,.4);background:linear-gradient(135deg,var(–sage),var(–sage-dark));}
+.btn-upload:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+.preview-grid{max-width:700px;margin:2rem auto 0;display:none;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:.8rem;}
+.preview-grid.has-items{display:grid;}
+.preview-thumb{aspect-ratio:1;border-radius:8px;overflow:hidden;position:relative;box-shadow:0 3px 12px rgba(0,0,0,.1);}
+.preview-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.preview-thumb .remove-btn{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.5);color:white;border:none;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
+.preview-thumb:hover .remove-btn{opacity:1;}
+
+.upload-status{text-align:center;margin-top:1.5rem;font-family:‘Jost’,sans-serif;font-size:.85rem;font-weight:300;color:var(–sage-dark);min-height:1.5rem;}
+.progress-bar-wrap{max-width:400px;margin:.8rem auto 0;height:3px;background:var(–pearl-deep);border-radius:3px;overflow:hidden;display:none;}
+.progress-bar-wrap.visible{display:block;}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(–sage-light),var(–sage-dark));border-radius:3px;transition:width .3s ease;width:0%;}
+
+/* GALLERY */
+.gallery-section{padding:5rem 2rem 7rem;background:linear-gradient(180deg,var(–cream) 0%,var(–pearl) 100%);position:relative;}
+.gallery-section::before{content:’’;position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(–gold),transparent);}
+.gallery-grid{max-width:1100px;margin:2.5rem auto 0;columns:3;column-gap:1rem;}
+@media(max-width:768px){.gallery-grid{columns:2;}}
+@media(max-width:480px){.gallery-grid{columns:2;column-gap:.6rem;}}
+.gallery-item{break-inside:avoid;margin-bottom:1rem;border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);cursor:pointer;transition:transform .3s ease,box-shadow .3s ease;}
+.gallery-item:hover{transform:translateY(-3px);box-shadow:0 10px 35px rgba(0,0,0,.15);}
+.gallery-item img{width:100%;display:block;transition:transform .5s ease;}
+.gallery-item:hover img{transform:scale(1.03);}
+.gallery-empty{text-align:center;padding:4rem 2rem;color:var(–text-muted);font-family:‘Cormorant Garamond’,serif;font-size:1.2rem;font-style:italic;}
+
+.refresh-btn{display:block;margin:0 auto 2rem;background:transparent;border:1px solid var(–sage-light);color:var(–sage-dark);font-family:‘Jost’,sans-serif;font-weight:300;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;padding:.6rem 1.8rem;border-radius:50px;cursor:pointer;transition:all .3s;}
+.refresh-btn:hover{background:var(–sage-light);color:white;}
+
+.lightbox{position:fixed;inset:0;background:rgba(30,25,20,.92);z-index:1000;display:none;align-items:center;justify-content:center;padding:2rem;backdrop-filter:blur(8px);}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:90vw;max-height:85vh;object-fit:contain;border-radius:8px;box-shadow:0 20px 80px rgba(0,0,0,.5);animation:zoomIn .3s ease both;}
+@keyframes zoomIn{from{opacity:0;transform:scale(.9);}to{opacity:1;transform:scale(1);}}
+.lightbox-close{position:fixed;top:1.5rem;right:1.5rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white;width:44px;height:44px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.lightbox-close:hover{background:rgba(255,255,255,.2);}
+
+footer{padding:3rem 2rem;text-align:center;background:var(–sage-dark);color:rgba(255,255,255,.6);}
+.footer-names{font-family:‘Cormorant Garamond’,serif;font-size:1.6rem;font-weight:300;font-style:italic;color:rgba(255,255,255,.9);margin-bottom:.4rem;}
+.footer-date{font-family:‘Jost’,sans-serif;font-weight:200;font-size:.75rem;letter-spacing:.35em;text-transform:uppercase;}
+.heart{color:var(–gold);display:inline-block;animation:heartbeat 2s ease-in-out infinite;}
+@keyframes heartbeat{0%,100%{transform:scale(1);}50%{transform:scale(1.2);}}
+
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(–sage-dark);color:white;padding:.8rem 1.8rem;border-radius:50px;font-family:‘Jost’,sans-serif;font-size:.85rem;font-weight:300;opacity:0;transition:all .4s ease;z-index:10000;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.2);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.photo-count{display:inline-block;background:var(–sage-light);color:white;font-family:‘Jost’,sans-serif;font-size:.7rem;font-weight:400;letter-spacing:.1em;padding:.2rem .8rem;border-radius:50px;margin-left:.6rem;vertical-align:middle;}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:.5rem;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.petal{position:absolute;border-radius:50% 5px;background:var(–gold);opacity:0;animation:float-petal linear infinite;}
+@keyframes float-petal{0%{transform:translateY(100vh) rotate(0deg);opacity:0;}10%{opacity:.25;}90%{opacity:.15;}100%{transform:translateY(-20px) rotate(360deg);opacity:0;}}
+</style>
+
+</head>
+<body>
+
+<!-- ══ PASSWORD GATE ══ -->
+
+<div class="gate" id="gate">
+  <div class="gate-leaves">
+    <div class="leaf-g"></div><div class="leaf-g"></div><div class="leaf-g"></div>
+    <div class="leaf-g"></div><div class="leaf-g"></div><div class="leaf-g"></div>
+  </div>
+  <div class="gate-card">
+    <div class="gate-ring">🌿</div>
+    <h2 class="gate-title"><em>Anass</em> &amp; <em>Sofia</em></h2>
+    <p class="gate-date">15 · 05 · 2026</p>
+    <p class="gate-label">Entrez le code reçu avec votre invitation<br>pour accéder à la galerie</p>
+    <div class="gate-input-wrap">
+      <input
+        class="gate-input"
+        id="gateInput"
+        type="password"
+        placeholder="Code secret…"
+        autocomplete="off"
+        onkeydown="if(event.key==='Enter') checkCode()"
+      >
+      <button class="eye-btn" id="eyeBtn" onclick="toggleEye()" title="Voir le code">👁</button>
+    </div>
+    <div class="gate-error" id="gateError"></div>
+    <button class="gate-btn" onclick="checkCode()">Entrer ✦</button>
+    <p class="gate-hint">Un jour précieux partagé avec vous</p>
+  </div>
+</div>
+
+<!-- ══ MAIN SITE ══ -->
+
+<div class="site" id="site">
+
+  <!-- CONFIG BANNER -->
+
+  <div class="config-banner" id="configBanner">
+    ⚙️ <strong>Configuration Cloudinary requise :</strong>
+    Ouvrez ce fichier et remplacez <code>do2mywfuw</code> et <code>wedding_upload</code>.
+    <a href="https://cloudinary.com/users/register_free" target="_blank" style="color:#5a3e05;">Créer un compte gratuit →</a>
+    &nbsp;|&nbsp;
+    <button onclick="dismissBanner()" style="background:none;border:1px solid #c9a96e;color:#5a3e05;padding:.2rem .8rem;border-radius:20px;cursor:pointer;font-size:.78rem;">Masquer</button>
+  </div>
+
+  <!-- HERO -->
+
+  <section class="hero">
+    <div class="leaf"></div><div class="leaf"></div><div class="leaf"></div><div class="leaf"></div>
+    <div class="leaf"></div><div class="leaf"></div><div class="leaf"></div><div class="leaf"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Mariage — Paris</p>
+      <h1 class="hero-names">
+        <em>Anass</em>
+        <span class="hero-ampersand">&amp;</span>
+        <em>Sofia</em>
+      </h1>
+      <p class="hero-date">15 · 05 · 2026</p>
+      <div class="hero-divider"></div>
+      <p class="hero-tagline">Partagez vos plus beaux instants de ce jour précieux</p>
+      <div class="scroll-cta">
+        <span>Déposer vos photos</span>
+        <div class="scroll-arrow"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UPLOAD -->
+
+  <section class="upload-section" id="upload">
+    <div class="section-header">
+      <p class="section-label">Vos souvenirs</p>
+      <h2 class="section-title">Offrez-nous vos <em>instants</em></h2>
+      <p class="section-sub">Vos photos seront visibles par tous les invités en temps réel ✦</p>
+    </div>
+    <div class="drop-zone" id="dropZone">
+      <input type="file" id="fileInput" accept="image/*" multiple>
+      <svg class="drop-icon" viewBox="0 0 52 52" fill="none">
+        <circle cx="26" cy="26" r="24" stroke="currentColor" stroke-width="1.2" stroke-dasharray="4 3"/>
+        <path d="M26 33V19M26 19L21 24M26 19L31 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M18 37h16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
+      </svg>
+      <p class="drop-title">Glissez vos photos ici</p>
+      <p class="drop-sub">ou cliquez pour sélectionner · JPG, PNG, HEIC</p>
+    </div>
+    <div class="preview-grid" id="previewGrid"></div>
+    <div style="text-align:center;margin-top:1.5rem;">
+      <button class="btn-upload" id="uploadBtn" disabled onclick="uploadPhotos()">✦ Partager mes photos</button>
+    </div>
+    <div class="upload-status" id="uploadStatus"></div>
+    <div class="progress-bar-wrap" id="progressWrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+
+  <section class="gallery-section" id="gallery">
+    <div class="section-header">
+      <p class="section-label">Galerie collective</p>
+      <h2 class="section-title">Nos souvenirs <em>partagés</em> <span class="photo-count" id="photoCount">…</span></h2>
+      <p class="section-sub">Tous les instants capturés par nos invités, en temps réel</p>
+    </div>
+    <button class="refresh-btn" onclick="loadGallery()">↻ Actualiser la galerie</button>
+    <div class="gallery-grid" id="galleryGrid">
+      <div class="gallery-empty">Chargement…</div>
+    </div>
+  </section>
+
+  <footer>
+    <p class="footer-names">Anass &amp; Sofia</p>
+    <p class="footer-date">15 Mai 2026 &nbsp;<span class="heart">♥</span></p>
+  </footer>
+
+</div><!-- /site -->
+
+<!-- LIGHTBOX -->
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+//  ⚙️  CONFIGURATION
+// ══════════════════════════════════════════
+const CLOUD_NAME    = 'do2mywfuw';
+const UPLOAD_PRESET = 'wedding_upload';
+const FOLDER        = 'anass-sofia-2026';
+const ACCESS_CODE   = 'Zayka'; // ← code secret (sensible à la casse)
+// ══════════════════════════════════════════
+
+const isConfigured = () => true;
+
+let selectedFiles = [];
+let galleryPhotos = [];
+let lightboxIndex = 0;
+
+// ── Gate logic
+window.addEventListener('load', () => {
+  // Check if already unlocked this session
+  if (sessionStorage.getItem('wedding_unlocked') === '1') {
+    unlockSite(false);
+  }
+  createPetals();
+});
+
+function checkCode() {
+  const val = document.getElementById('gateInput').value.trim();
+  const input = document.getElementById('gateInput');
+  const err = document.getElementById('gateError');
+
+  if (val === ACCESS_CODE) {
+    sessionStorage.setItem('wedding_unlocked', '1');
+    err.textContent = '';
+    unlockSite(true);
+  } else {
+    input.classList.add('error');
+    err.textContent = 'Code incorrect, réessayez 🌿';
+    setTimeout(() => input.classList.remove('error'), 500);
+    input.value = '';
+    input.focus();
+  }
+}
+
+function unlockSite(animate) {
+  document.getElementById('gate').classList.add('unlocked');
+  const site = document.getElementById('site');
+  site.classList.add('visible');
+
+  if (animate) {
+    setTimeout(() => {
+      if (isConfigured()) {
+        document.getElementById('configBanner').classList.add('hidden');
+      }
+      loadGallery();
+      setInterval(loadGallery, 30000);
+    }, 400);
+  } else {
+    if (isConfigured()) document.getElementById('configBanner').classList.add('hidden');
+    loadGallery();
+    setInterval(loadGallery, 30000);
+  }
+}
+
+function toggleEye() {
+  const inp = document.getElementById('gateInput');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+function dismissBanner() { document.getElementById('configBanner').classList.add('hidden'); }
+
+// ── Drag & Drop
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('dragover');
+  addFiles(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
+});
+fileInput.addEventListener('change', e => { addFiles(Array.from(e.target.files)); fileInput.value = ''; });
+
+function addFiles(files) { selectedFiles = [...selectedFiles, ...files]; renderPreview(); updateBtn(); }
+
+function renderPreview() {
+  const grid = document.getElementById('previewGrid');
+  grid.innerHTML = '';
+  if (!selectedFiles.length) { grid.classList.remove('has-items'); return; }
+  grid.classList.add('has-items');
+  selectedFiles.forEach((file, i) => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const div = document.createElement('div');
+      div.className = 'preview-thumb';
+      div.innerHTML = `<img src="${ev.target.result}" alt=""><button class="remove-btn" onclick="removeFile(${i})">✕</button>`;
+      grid.appendChild(div);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function removeFile(i) { selectedFiles.splice(i, 1); renderPreview(); updateBtn(); }
+
+function updateBtn() {
+  const btn = document.getElementById('uploadBtn');
+  btn.disabled = !selectedFiles.length;
+  btn.innerHTML = selectedFiles.length
+    ? `✦ Partager ${selectedFiles.length} photo${selectedFiles.length > 1 ? 's' : ''}`
+    : '✦ Partager mes photos';
+}
+
+// ── Upload
+async function uploadPhotos() {
+  if (!selectedFiles.length) return;
+  if (!isConfigured()) { showToast('⚠️ Configurez Cloudinary d\'abord'); return; }
+
+  const btn = document.getElementById('uploadBtn');
+  const status = document.getElementById('uploadStatus');
+  const progressWrap = document.getElementById('progressWrap');
+  const progressBar = document.getElementById('progressBar');
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Envoi en cours…';
+  progressWrap.classList.add('visible');
+
+  const total = selectedFiles.length;
+  let done = 0, errors = 0;
+
+  for (const file of selectedFiles) {
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('upload_preset', UPLOAD_PRESET);
+      fd.append('folder', FOLDER);
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method:'POST', body:fd });
+      if (!res.ok) throw new Error();
+      done++;
+    } catch { errors++; done++; }
+    progressBar.style.width = Math.round((done / total) * 100) + '%';
+    status.textContent = `Envoi… ${done}/${total}`;
+  }
+
+  selectedFiles = []; renderPreview(); updateBtn();
+  progressWrap.classList.remove('visible'); progressBar.style.width = '0%'; status.textContent = '';
+  btn.disabled = false; btn.innerHTML = '✦ Partager mes photos';
+
+  showToast(errors === 0
+    ? `${total} photo${total > 1 ? 's' : ''} partagée${total > 1 ? 's' : ''} ✦`
+    : `${total - errors} réussie(s), ${errors} erreur(s)`);
+
+  setTimeout(() => { loadGallery(); document.getElementById('gallery').scrollIntoView({ behavior:'smooth' }); }, 800);
+}
+
+// ── Gallery
+async function loadGallery() {
+  if (!isConfigured()) { renderGallery([]); return; }
+  try {
+    const res = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${FOLDER}.json`);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    galleryPhotos = (data.resources || [])
+      .sort((a,b) => new Date(b.created_at||0) - new Date(a.created_at||0))
+      .map(r => ({
+        src: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/q_auto,f_auto,w_800/${r.public_id}`,
+        srcFull: `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/q_auto,f_auto/${r.public_id}`
+      }));
+    renderGallery(galleryPhotos);
+  } catch { renderGallery([]); }
+}
+
+function renderGallery(photos) {
+  document.getElementById('photoCount').textContent = photos.length;
+  const grid = document.getElementById('galleryGrid');
+  if (!photos.length) {
+    grid.innerHTML = isConfigured()
+      ? '<div class="gallery-empty">Les premières photos apparaîtront ici ✦</div>'
+      : '<div class="gallery-empty">Configurez Cloudinary pour activer la galerie partagée ✦</div>';
+    return;
+  }
+  grid.innerHTML = photos.map((p,i) => `
+    <div class="gallery-item" onclick="openLightbox(${i})">
+      <img src="${p.src}" alt="Photo invité" loading="lazy">
+    </div>`).join('');
+}
+
+// ── Lightbox
+function openLightbox(idx) {
+  lightboxIndex = idx;
+  document.getElementById('lightboxImg').src = galleryPhotos[idx].srcFull;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowRight' && galleryPhotos.length) openLightbox((lightboxIndex+1) % galleryPhotos.length);
+  if (e.key === 'ArrowLeft' && galleryPhotos.length) openLightbox((lightboxIndex-1+galleryPhotos.length) % galleryPhotos.length);
+});
+
+// ── Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── Petals
+function createPetals() {
+  const hero = document.querySelector('.hero');
+  if (!hero) return;
+  for (let i = 0; i < 12; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    const s = 4 + Math.random() * 8;
+    p.style.cssText = `width:${s}px;height:${s*1.6}px;left:${Math.random()*100}%;animation-duration:${6+Math.random()*8}s;animation-delay:${Math.random()*10}s;`;
+    hero.appendChild(p);
+  }
+}
+</script>
+
+</body>
+</html>
